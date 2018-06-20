@@ -2,7 +2,7 @@
   <div class="left-nav">
     <ul>
         <li>
-            <i class="icon iconfont icon-wodezichan"></i>
+            <i class="icon iconfont icon-goumai"></i>
             <div>收银</div>
         </li>
  
@@ -12,18 +12,18 @@
         </li>
  
         <li>
-            <i class="icon iconfont icon-hanbao"></i>
+            <i class="icon iconfont icon-shipin"></i>
             <div>商品</div>
         </li>
  
          <li>
-            <i class="icon iconfont icon-huiyuanqia"></i>
+            <i class="icon iconfont icon-wo"></i>
             <div>会员</div>
         </li>
  
  
         <li>
-            <i class="icon iconfont icon-tongji"></i>
+            <i class="icon iconfont icon-fenlei"></i>
             <div>统计</div>
         </li>
 </ul>
