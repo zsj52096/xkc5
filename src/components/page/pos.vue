@@ -220,7 +220,8 @@ export default {
     float: left;
     border: 1px solid #E5e9f2;
     padding: 10px;
-    margin: 10px;background-color: #fff;
+    margin: 10px;
+    background-color: #fff;
  }
  .o-price{
    color: #58b7ff;
