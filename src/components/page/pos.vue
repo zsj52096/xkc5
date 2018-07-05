@@ -11,12 +11,15 @@
               <el-table-column label="操作" width="100" fixed="right">
                 <template slot-scope="scope">
             <el-button type="text" label="shanchu" size="small">删除</el-button>
-            <el-button type="text" size="small">增加</el-button>
+            <el-button type="text" size="small" @click="addOrderList(scope.row)">增加</el-button>
  
                 </template>
               </el-table-column>
                 
             </el-table>
+            <div class="totalDiv">
+              <small>数量</small> ：{{totalCount}}  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <small>金额</small>：{{totalMoney}}元
+            </div>
             <div class="div-btn">
               <el-button type="warning">挂单</el-button>
               <el-button type="danger">删除</el-button>
@@ -35,7 +38,7 @@
           <div class="title">常用商品</div>
           <div class="often-goods-list">
             <ul>
-              <li v-for="goods in oftenGoods">
+              <li v-for="goods in oftenGoods" @click="addOrderList(goods)">
                 <span>{{goods.goodsName}}</span>
                 <span class="o-price">￥{{goods.price}}元</span>
               </li>
@@ -47,7 +50,7 @@
             <el-tab-pane label=汉堡>
               <div>
 <ul class='cookList'>
-    <li v-for="goods in type0Goods">
+    <li v-for="goods in type0Goods"  @click="addOrderList(goods)">
         <span class="foodImg"><img :src="goods.goodsImg" width="100%"></span>
         <span class="foodName">{{goods.goodsName}}</span>
         <span class="foodPrice">￥{{goods.price}}元</span>
@@ -55,9 +58,27 @@
 </ul>
               </div>
             </el-tab-pane>
-            <el-tab-pane label=小食>小食</el-tab-pane>
-            <el-tab-pane label=饮料>饮料</el-tab-pane>
-            <el-tab-pane label=套餐>套餐</el-tab-pane>
+            <el-tab-pane label=小食><ul class='cookList'>
+    <li v-for="goods in type1Goods"  @click="addOrderList(goods)">
+        <span class="foodImg"><img :src="goods.goodsImg" width="100%"></span>
+        <span class="foodName">{{goods.goodsName}}</span>
+        <span class="foodPrice">￥{{goods.price}}元</span>
+    </li>
+</ul></el-tab-pane>
+            <el-tab-pane label=饮料><ul class='cookList'>
+    <li v-for="goods in type2Goods"  @click="addOrderList(goods)">
+        <span class="foodImg"><img :src="goods.goodsImg" width="100%"></span>
+        <span class="foodName">{{goods.goodsName}}</span>
+        <span class="foodPrice">￥{{goods.price}}元</span>
+    </li>
+</ul></el-tab-pane>
+            <el-tab-pane label=套餐><ul class='cookList'>
+    <li v-for="goods in type3Goods"  @click="addOrderList(goods)">
+        <span class="foodImg"><img :src="goods.goodsImg" width="100%"></span>
+        <span class="foodName">{{goods.goodsName}}</span>
+        <span class="foodPrice">￥{{goods.price}}元</span>
+    </li>
+</ul></el-tab-pane>
             </el-tabs>
         </div>
 
@@ -67,130 +88,153 @@
 </template>
  
 <script>
-import axios from 'axios';
+import axios from "axios";
 export default {
-  name: 'pos',
-  data(){
-   return{
-     tableData:[{
-          
-          goodsName: '可口可乐',
-          price: 8,
-          count:1
-        }, {
-          
-          goodsName: '香辣鸡腿堡',
-          price: 15,
-          count:1
-        }, {
-         
-          goodsName: '爱心薯条',
-          price: 8,
-          count:1
-        }, {
-         
-          goodsName: '甜筒',
-          price: 8,
-          count:1
-        }],
-        oftenGoods:[],
-      type0Goods:[],
-      type1Goods:[],
-      type2Goods:[],
-      type3Goods:[]
-   }
+  name: "pos",
+  data() {
+    return {
+      tableData: [],
+      oftenGoods: [],
+      type0Goods: [],
+      type1Goods: [],
+      type2Goods: [],
+      type3Goods: [],
+      totalMoney:0,
+      totalCount:0
+    };
   },
-  created:function() {
-      axios.get('http://jspang.com/DemoApi/oftenGoods.php')
-      .then(reponse=>{
-      //console.log(reponse);
-      this.oftenGoods=reponse.data;
+
+  // created:function() {
+  //   axios.get('http://jspang.com/DemoApi/oftenGoods.php')
+  //   .then(reponse=>{
+  //     this.oftenGoods=reponse.data;
+  //     console.log(reponse)
+  //   })
+  //   .catch(error=>{
+  //     console.log(error)
+  //      alert('网络错误，不能访问');
+  //   })
+  // },
+  created: function() {
+    axios
+      .get("http://jspang.com/DemoApi/typeGoods.php")
+      .then(reponse => {
+        // console.log(reponse);
+        this.type0Goods = reponse.data[0];
+        this.type1Goods = reponse.data[1];
+        this.type2Goods = reponse.data[2];
+        this.type3Goods = reponse.data[3];
       })
-      .catch(error=>{
-          //console.log(error);
-          alert('网络错误，不能访问');
+      .catch(error => {
+        //console.log(error);
+        alert("网络错误，不能访问");
+      });
+
+    axios
+      .get("http://jspang.com/DemoApi/oftenGoods.php")
+      .then(reponse => {
+        this.oftenGoods = reponse.data;
+        console.log(reponse);
       })
+      .catch(error => {
+        console.log(error);
+        alert("网络错误，不能访问");
+      });
   },
-  created:function() {
-      axios.get('http://jspang.com/DemoApi/typeGoods.php')
-      .then(reponse=>{
-    //   console.log(reponse);
-      this.type0Goods=reponse.data[0];
-      this.type1Goods=reponse.data[1];
-      this.type2Goods=reponse.data[2];
-      this.type3Goods=reponse.data[3];
-      })
-      .catch(error=>{
-          //console.log(error);
-          alert('网络错误，不能访问');
-      })
+  mounted: function() {
+    var posBHeight = document.body.clientHeight;
+    console.log(posBHeight);
+    document.getElementById("posB").style.height = posBHeight + "px";
   },
-  mounted:function(){
-    var posBHeight=document.body.clientHeight;
-    console.log(posBHeight)
-    document.getElementById('posB').style.height=posBHeight+"px";
+  methods:{
+    addOrderList(goods){
+      this.totalMoney = 0;
+      this.totalCount = 0;
+      let isHave =false
+      for(let i = 0; i<this.tableData.length;i++){
+        if(this.tableData[i].goodsId==goods.goodsId){
+          isHave = true;
+        }
+      }
+      if(isHave){
+        let arr = this.tableData.filter(o=>o.goodsId == goods.goodsId);
+        arr[0].count++;
+      }else{
+        let newGoods={goodsId:goods.goodsId,goodsName:goods.goodsName,price:goods.price,count:1}
+        this.tableData.push(newGoods);
+      }
+      this.tableData.forEach(element => {
+        this.totalCount+=element.count;
+        this.totalMoney = this.totalMoney+(element.price*element.count);
+      });
+    }
   }
-}
+};
 </script>
 <style scoped>
- .posA{
-   background-color: #f9fafc;
-   border-right:1px solid #c0ccda;
-   }
- .div-btn{
+.posA {
+  background-color: #f9fafc;
+  border-right: 1px solid #c0ccda;
+}
+.div-btn {
   margin-top: 15px;
   text-align: center;
 }
- .title{
-   height: 20px;
-   border-bottom:1px solid #D3dce6;
-   background-color: #f9fafc;
-   padding: 10px;
-   text-align: left; 
- }
- .often-goods-list ul li{
-    list-style: none;
-    float: left;
-    border: 1px solid #E5e9f2;
-    padding: 10px;
-    margin: 10px;
-    background-color: #fff;
- }
- .o-price{
-   color: #58b7ff;
- }
- .goods-type{
-   clear: both;
- }
-.cookList li{
-       list-style: none;
-       width:23%;
-       border:1px solid #E5E9F2;
-       height: auto;
-       overflow: hidden;
-       background-color:#fff;
-       padding: 2px;
-       float:left;
-       margin: 2px;
- 
-   }
-   .cookList li span{
-       
-        display: block;
-        float:left;
-   }
-   .foodImg{
-       width: 40%;
-   }
-   .foodName{
-       font-size: 18px;
-       padding-left: 10px;
-       color:brown;
- 
-   }
-   .foodPrice{
-       font-size: 16px;
-       padding-left: 10px;
-       padding-top:10px;
-   }
+.title {
+  height: 20px;
+  border-bottom: 1px solid #d3dce6;
+  background-color: #f9fafc;
+  padding: 10px;
+  text-align: left;
+}
+.often-goods-list ul li {
+  list-style: none;
+  float: left;
+  border: 1px solid #e5e9f2;
+  padding: 10px;
+  margin: 10px;
+  background-color: #fff;
+  cursor: pointer;
+}
+.o-price {
+  color: #58b7ff;
+}
+.goods-type {
+  clear: both;
+}
+.cookList li {
+  list-style: none;
+  width: 23%;
+  border: 1px solid #e5e9f2;
+  height: auto;
+  overflow: hidden;
+  background-color: #fff;
+  padding: 2px;
+  cursor: pointer;
+  float: left;
+  margin: 2px;
+}
+.cookList li span {
+  display: block;
+  float: left;
+}
+.foodImg {
+  width: 40%;
+}
+.foodName {
+  font-size: 16px;
+  padding-left: 10px;
+  color: brown;
+}
+.foodPrice {
+  font-size: 16px;
+  padding-left: 10px;
+  padding-top: 10px;
+}
+.totalDiv{
+  background: #fff;
+  padding: 10px;
+  border-bottom:1px solid #d3dce6;
+  text-align: center;
+}
 </style>
